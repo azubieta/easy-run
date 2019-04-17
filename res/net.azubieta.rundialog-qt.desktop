@@ -7,5 +7,5 @@ TryExec=rundialog-qt
 Exec=rundialog-qt %F
 Icon=rundialog-qt
 Categories=Utility;
-Terminal=true
+NoDisplay=true
 MimeType=application/x-sharedlib;application/x-executable;
