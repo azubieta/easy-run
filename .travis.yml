@@ -7,8 +7,6 @@ notifications:
 
 addons:
   apt:
-    sources:
-      - sourceline: ppa:beineri/opt-qt-5.10.1-trusty
     packages:
       - realpath
       - wget
@@ -16,12 +14,21 @@ addons:
       - realpath
       - cmake
       - desktop-file-utils
-      - qt510-meta-minimal
+      - pkg-config
+      - build-essential
 
+install:
+  # Install conan
+  - sudo wget -qnc https://github.com/azubieta/conan-appimage/releases/download/continuous/conan-8e5c23a-x86_64.AppImage -O /usr/bin/conan
+  - sudo chmod a+x /usr/bin/conan
+
+  # Configure conan remotes
+  - conan remote add appimage ${APPIMAGE_REPO_URL} --insert
+  - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 
 script:
-  - /opt/qt510/bin/qt510-env.sh
-  - sudo update-alternatives --install /usr/bin/qmake qmake /opt/qt510/bin/qmake 1
+  - conan install . --build missing -g virtualrunenv
+  - source activate_run.sh
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make install -j`nproc` DESTDIR=AppDir
 
@@ -30,7 +37,7 @@ script:
   - wget -nc https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
 
   - chmod +x linuxdeploy-*
-  - export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/qt510/lib
+  - export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/AppDir/usr/lib
   - ./linuxdeploy-x86_64.AppImage --appdir=AppDir --plugin qt --output appimage
 
 after_success:
