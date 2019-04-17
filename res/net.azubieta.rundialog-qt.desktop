@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=rundialog-qt
+Comment=Run dialog
+TryExec=rundialog-qt
+Exec=rundialog-qt %F
+Icon=rundialog-qt
+Categories=Utility;
+Terminal=true
+MimeType=application/x-sharedlib;application/x-executable;
